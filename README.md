@@ -81,43 +81,49 @@ CREATE DATABASE <데이터베이스 이름> : 데이터베이스 생성
    WHERE gender = 'm'
    AND address LIKE '서울%'
    AND age BETWEEn 25 and 29;
+   
+서울시에 거주중인 25~29세 남자  
 ```
-서울시에 거주중인 25~29세 남자
 
 ```SELECT * FROM service_name_main.member
    WHERE (gender = 'm' AND height >= 180)
     OR (gender = 'f' AND height >= 170)
    ORDER BY height ASC;
-```
+   
 키 180이상의 남자와 170이상의 여자, 키 순으로 오름차순 (DESC: 내림차순)
+```
 
 ```
 SELECT * FROM service_name_main.member
 WHERE gender = 'm'
   AND weight >= 70
 ORDER BY height DESC;
-```
+
 성별이 남자고, 무게가 70 이상인 회원들을 키 내림차순으로 정렬
+```
 
 ```
 SELECT sign_up_day, email FROM service_name_main.member
 ORDER BY YEAR(sign_up_day) DESC, email ASC;
-```
+
 sign_up_day, email컬럼에서 연도는 내림차순, 이메일은 오름차순
+```
 
 ```
 SELECT * FROM service_name_main.member
 ORDER BY sign_up_day DESC
 LIMIT 10;
-```
+
 10개 한정 보기
+```
 
 ```
 SELECT * FROM service_name_main.member
 ORDER BY sign_up_day DESC
 LIMIT 8, 2;
-```
+
 9번째 row부터 2개만 보기
+```
 
 `SELECT*FROM review WHERE comment LIKE BINARY '%yummy%';` comment 컬럼의 문자열값에 'yummy'가 포함된 row들을 조회하는데 'Yummy'는 제외하고 싶을 때
 
@@ -153,8 +159,9 @@ SELECT * FROM service_name_main.member
 WHERE height IS NULL
   OR weight IS NULL
   OR address IS NULL;
-```
+
 세 칼럼 중 하나라도 null이 있는 경우를 조회
+```
 
 ```
 SELECT
@@ -162,8 +169,9 @@ COALESCE(height, '####'),
 COALESCE(height, '—-'),
 COALESCE(height, '@@@')
 FROM service_name_main.member;
-```
+
 height 컬럼의 null을 일반적인 단어로 바꿀때
+```
 
 ```
 SELECT
@@ -180,12 +188,13 @@ SELECT
   weight,
   weight / ((height/100) * (height/100)) AS BMI
 FROM service_name_main.member;
-```
+
 BMI구할 때(컬럼끼리 덧셈, 뺄셈, 곱셈, 나눗셈 등 간단한 연산이 가능함
 
 컬럼 이름을 BMI로 설정 (Alias별명,별칭 붙이기)
 
 AS 없이 스페이스키 하나만으로도 가능은함. AS 붙여주는게 좋긴함
+```
 
 ```
 SELECT
@@ -193,10 +202,13 @@ SELECT
   CONCAT(height, 'cm', ', ', weight, 'kg') AS '키와 몸무게',
   weight / ((height/100) * (height/100)) AS BMI
 FROM service_name_main.member;
-```
+
 컬럼과 컬럼을 이어붙일 때는 CONCAT
+```
 
 ```
+조건에 따라 새로운 컬럼을 만들 때
+
 SELECT 
 	email, 
     CONCAT(height, 'cm', ', ', weight, 'kg') AS '키와 몸무게',
@@ -213,7 +225,6 @@ FROM copang_main.member
 ORDER BY obesity_check ASC;
 
 ```
-조건에 따라 새로운 컬럼을 만들 때
 
 `SELECT IFNULL(height, 'N/A') FROM service_name_main.member;` 첫번째 인자가 null인 경우에는 두번째 인자를 표시하고 null이 아닌 경우 해당값을 그대로 표현
 
@@ -254,8 +265,9 @@ SELECT gender,
   MIN(weight),
 FROM service_name_main.member 
 GROUP BY gender;
-```
+
 성별, 성별 count, 평균 키, 최소 몸무게
+```
 
 ```
 SELECT
@@ -266,8 +278,9 @@ FROM service_name_main.member
 GROUP BY
   SUBSTRING(address, 1, 2),
   gender;
-```
+  
 주소 앞 2글자 기준으로, gender와 주소 기준으로 카운트
+```
 
 ```
 SELECT
@@ -279,8 +292,9 @@ GROUP BY
   SUBSTRING(address, 1, 2),
   gender
 HAVING region = '서울';
-```
+
 region 칼럼이 서울인 값만 조회
+```
 
 ```
 SELECT
@@ -293,8 +307,9 @@ GROUP BY
   gender
 HAVING region = '서울'
   AND gender = 'm';
-```
+  
 서울에 사는 남성회원 그룹
+```
 
 
 ```
@@ -310,8 +325,9 @@ HAVING region IS NOT NULL
 ORDER BY
   region ASC,
   gender DESC ; 
-```
+  
 region이 null이 아닌 경우에 region 오름차순, gender 내림차순
+```
 
 
 ### GROUP BY 규칙
@@ -352,30 +368,32 @@ NULL값의 출처를 알 수 없을 때, 구분할 수 있도록 해주는 함�
 
 ```
 SELECT
-		item.id,
+	item.id,
         item.name,
         stock.item_id,
         stock.inventory_count
 FROM item LEFT OUTER JOIN stock
 ON item.id = stock.item_id
-```
-item 테이블을 기준으로 stock 테이블을 병합
+
+해석)item 테이블을 기준으로 stock 테이블을 병합
 
 item의 id컬럼, item의 name, stock의 item_id,  stock의 inventory_count 칼럼을 보여줘
 
 이때 item의 id칼럼과 stock의 item_id칼럼은 같은 값이야
+```
 
 
 ```
 SELECT
-				i.id,
+	i.id,
         i.name,
         s.item_id,
         s.inventory_count
 FROM item  (AS) i LEFT OUTER JOIN stock (AS) s
 ON item.id = stock.item_id 
-```
+
 Alias붙일때는 다른 라인도 모두 맞춰줘야함
+```
 
 
 ```
@@ -423,10 +441,11 @@ UNION
 SELECT * FROM item_new
 
 #통합하기, concat 기능인듯, 합집합
-```
+
 UNION 연산과 UNION ALL 연산은 둘다 합집합을 구하되, 전자는 중복을 제거해서 보여주고, 후자는 그런 작업없이 두 테이블을 합친 결과를 그대로 보여준다는 차이가 있다.
 
-만약 중복을 제거하고 깔끔하게 보는 것이 중요한 경우에는 UNION 연산자를 사용하고, 중복을 제거하게 되면 정보 누락이 발생할 수 있는 경우에는 UNION ALL 연산자를 사용하면 됨
+만약 중복을 제거하고 깔끔하게 보는 것이 중요한 경우에는 UNION 연산자를 사용하고, 중복을 제거하게 되면 정보 누락이 발생할 수 있는 경우에는 UNION ALL 연산자를 사용하면 됨\
+```
 
 
 ### 세가지 테이블 조인할 때
@@ -442,7 +461,6 @@ FROM
   LEFT OUTER JOIN member AS m
     ON r.mem_id = m.id;
 ```   
-세가지 테이블을 조인할 때
 
 
 ```
@@ -512,13 +530,14 @@ WHERE price > (SELECT AVG(price) FROM item);
 ```
 
 
+```
 - 상품 중 리뷰가 최소 3개 이상 달린 상품들의 정보만 보고싶을 경우 → 서브쿼리로 해결가능
 
     - IN은 뒤에있는 값 중 하나라도 있으면 만족
     
     - 리뷰 테이블의 각 row를 item_id 기준으로 그룹핑하고, 포함된 row 수가 3개 이상인 그룹들만 추린다
 
-```
+
 SELECT*FROM item
 WHERE id IN
 (
@@ -526,14 +545,15 @@ SELECT item_id
 FROM review
 GROUP BY item_id HAVING COUNT(*) >= 3
 );
-
 ```
 
 
+```
 서브쿼리 활용: 주요 지역 주소 중에 리뷰수가 제일 많고 , 지역이름이 안드/NULL이 아님
 
 ⇒ TABLE형태의 서브쿼리를 만들때는 반드시 alias 붙여줘야함
-```
+
+
 SELECT
   AVG(review_count),
   MAX(review_count),
